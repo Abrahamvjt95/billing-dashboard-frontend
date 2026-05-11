@@ -8,7 +8,7 @@ SaaS billing dashboard built with Angular 21 modern APIs — standalone componen
 
 **Live demo →** `https://billing-dashboard.vercel.app`  
 **Demo account →** `demo@billflow.com` / `demo123`  
-**Backend repo →** [billing-dashboard-api](https://github.com/abrahamjaimes/billing-dashboard-api)
+**Backend repo →** [billing-dashboard-api](https://github.com/Abrahamvjt95/billing-dashboard-api)
 
 ---
 
@@ -64,7 +64,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
 ```bash
 # 1. Clone
-git clone https://github.com/abrahamjaimes/billing-dashboard-frontend.git
+git clone https://github.com/Abrahamvjt95/billing-dashboard-frontend.git
 cd billing-dashboard-frontend
 
 # 2. Install
