@@ -1,59 +1,117 @@
-# BillingDashboardFrontend
+# Billing Dashboard — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+![Angular](https://img.shields.io/badge/Angular-21-DD0031?logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)
+![SCSS](https://img.shields.io/badge/SCSS-custom_design_system-CC6699?logo=sass&logoColor=white)
 
-## Development server
+SaaS billing dashboard built with Angular 21 modern APIs — standalone components, signals, OnPush change detection and a custom SCSS design system (no UI library).
 
-To start a local development server, run:
+**Live demo →** `https://billing-dashboard.vercel.app`  
+**Demo account →** `demo@billflow.com` / `demo123`  
+**Backend repo →** [billing-dashboard-api](https://github.com/abrahamjaimes/billing-dashboard-api)
+
+---
+
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Angular 21 (standalone components) |
+| State | Angular Signals + `computed()` + `toSignal()` |
+| HTTP | `HttpClient` + functional interceptor (JWT + auto-refresh) |
+| Forms | Reactive Forms with real-time signal-driven validation |
+| Charts | Chart.js |
+| Styles | Custom SCSS design system — no Angular Material, no PrimeNG |
+| Deploy | Vercel |
+
+## Features
+
+- **Dashboard** — revenue stats, donut chart by invoice status, quick actions
+- **Clients** — paginated list, create/edit modal, detail view
+- **Invoices** — filterable list (All / Draft / Sent / Paid / Overdue), form with dynamic line items, real-time totals
+- **Payments** — record payments from invoice detail, partial payment support, auto-close on full payment
+- **JWT auth** — login, register, silent token refresh (rotate-on-use)
+- **Responsive** — mobile-first, sidebar becomes a drawer on small screens
+
+## Angular patterns used
+
+```typescript
+// Signals for reactive state
+protected loading = signal(false);
+protected stats   = signal<DashboardStats | null>(null);
+
+// toSignal() to bridge RxJS → signals
+private itemValues = toSignal(
+  this.items.valueChanges.pipe(startWith(this.items.value))
+);
+
+// computed() for derived state
+protected subtotal = computed(() =>
+  (this.itemValues() ?? []).reduce((sum, item) =>
+    sum + ((+item.quantity || 0) * (+item.unitPrice || 0)), 0)
+);
+
+// Functional interceptor with refresh token rotation
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const auth = inject(AuthService);
+  ...
+};
+```
+
+## Running locally
+
+**Prerequisites:** Node 20+, Angular CLI 21
 
 ```bash
+# 1. Clone
+git clone https://github.com/abrahamjaimes/billing-dashboard-frontend.git
+cd billing-dashboard-frontend
+
+# 2. Install
+npm install
+
+# 3. Start (requires backend running on :8080)
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open `http://localhost:4200`.
 
-## Code scaffolding
+To point to a different API:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```typescript
+// src/environments/environment.ts
+export const environment = {
+  apiUrl: 'http://your-api-url/api/v1'
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Project structure
 
-```bash
-ng generate --help
+```
+src/app/
+├── core/
+│   ├── guards/          # auth.guard, guest.guard (CanActivateFn)
+│   ├── interceptors/    # auth.interceptor (JWT + refresh)
+│   ├── models/          # TypeScript interfaces
+│   └── services/        # AuthService, ClientService, InvoiceService…
+├── features/
+│   ├── auth/            # login, register
+│   ├── clients/         # list, form (modal), detail
+│   ├── dashboard/       # stats + Chart.js donut
+│   └── invoices/        # list, form (dynamic items), detail + payments
+├── layout/
+│   └── shell/           # sidebar + topbar + router-outlet
+└── styles.scss          # design system: tokens, card, btn, badge, table…
 ```
 
-## Building
+## Design system
 
-To build the project run:
+All UI built from scratch — no component library. Key pieces in `styles.scss`:
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **CSS custom properties** — color palette, spacing scale, typography, shadows
+- **`.card`** — surface with border and shadow
+- **`.badge`** — status pills (draft / sent / paid / overdue)
+- **`.btn`** — primary, secondary, danger, ghost variants
+- **`.form-control`** — inputs with focus ring and validation states
+- **`table`** — striped hover rows with horizontal scroll on mobile
+- **`.modal`** — backdrop + dialog with header/body/footer
