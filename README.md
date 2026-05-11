@@ -6,8 +6,10 @@
 
 SaaS billing dashboard built with Angular 21 modern APIs — standalone components, signals, OnPush change detection and a custom SCSS design system (no UI library).
 
-**Live demo →** `https://billing-dashboard.vercel.app`  
-**Demo account →** `demo@billflow.com` / `demo123`  
+**Live demo →** [billing-dashboard-frontend-zeta.vercel.app](https://billing-dashboard-frontend-zeta.vercel.app)  
+**Demo account →** `demo@billflow.com` / `demo1234`  
+**Backend API →** `https://billing-dashboard-api-production.up.railway.app`  
+**Swagger UI →** `https://billing-dashboard-api-production.up.railway.app/swagger-ui.html`  
 **Backend repo →** [billing-dashboard-api](https://github.com/Abrahamvjt95/billing-dashboard-api)
 
 ---
@@ -81,9 +83,12 @@ To point to a different API:
 ```typescript
 // src/environments/environment.ts
 export const environment = {
-  apiUrl: 'http://your-api-url/api/v1'
+  production: false,
+  apiUrl: 'http://localhost:8080/api/v1'
 };
 ```
+
+Production points to the Railway backend automatically via `environment.prod.ts`.
 
 ## Project structure
 
