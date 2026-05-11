@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://TU-RAILWAY-URL.railway.app/api/v1'
+  apiUrl: 'https://billing-dashboard-api-production.up.railway.app/api/v1'
 };
